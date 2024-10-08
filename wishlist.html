@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Song/Artist Wishlist</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+        }
+        input[type="text"] {
+            padding: 10px;
+            width: calc(100% - 22px);
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 15px;
+            margin-bottom: 20px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            padding: 10px;
+            background: #fff;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .remove-button {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Song/Artist Wishlist</h1>
+    <input type="text" id="entryInput" placeholder="Enter song or artist" />
+    <button onclick="addEntry()">Add Entry</button>
+    <ul id="wishlist"></ul>
+
+    <script>
+        // Load wishlist from local storage on page load
+        document.addEventListener("DOMContentLoaded", loadWishlist);
+
+        function loadWishlist() {
+            const wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+            const wishlistElement = document.getElementById("wishlist");
+            wishlistElement.innerHTML = ""; // Clear current list
+
+            wishlist.forEach((entry, index) => {
+                const li = document.createElement("li");
+                li.textContent = entry;
+                const removeButton = document.createElement("button");
+                removeButton.textContent = "Remove";
+                removeButton.className = "remove-button";
+                removeButton.onclick = () => removeEntry(index);
+                li.appendChild(removeButton);
+                wishlistElement.appendChild(li);
+            });
+        }
+
+        function addEntry() {
+            const entryInput = document.getElementById("entryInput");
+            const entry = entryInput.value.trim();
+            if (!entry) return alert("Please enter a song or artist.");
+
+            const wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+            wishlist.push(entry);
+            localStorage.setItem("wishlist", JSON.stringify(wishlist));
+
+            entryInput.value = ""; // Clear the input
+            loadWishlist(); // Reload the wishlist
+        }
+
+        function removeEntry(index) {
+            const wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+            wishlist.splice(index, 1);
+            localStorage.setItem("wishlist", JSON.stringify(wishlist));
+            loadWishlist(); // Reload the wishlist
+        }
+    </script>
+</body>
+</html>
